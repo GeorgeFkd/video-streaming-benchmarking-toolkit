@@ -1,0 +1,92 @@
+[
+	{
+		"RunID": 1,
+		"SenderCommand": "gst-launch-1.0 v4l2src ! jpegdec ! autovideosink",
+		"ReceiverCommand": "",
+		"Description": "Locally, using compressed mpeg frames",
+		"VideoName": "Local-Compressed-JpegDec.mp4",
+		"Camera": {},
+		"Stats": {
+			"average_delay": 65,
+			"standard_deviation": 0.88
+		}
+	},
+	{
+		"RunID": 2,
+		"SenderCommand": "gst-launch-1.0 v4l2src ! video/x-raw ! videoconvert ! autovideosink",
+		"ReceiverCommand": "",
+		"Description": "Locally, using uncompressed frames(YUYV)",
+		"VideoName": "Local-Uncompressed.mp4",
+		"Camera": {},
+		"Stats": {
+			"average_delay": -1,
+			"standard_deviation": -1
+		}
+	},
+	{
+		"RunID": 3,
+		"SenderCommand": "gst-launch-1.0 v4l2src ! video/x-raw ! videoconvert ! vp8enc ! rtpvp8pay ! udpsink host=127.0.0.1 port=2001",
+		"ReceiverCommand": "gst-launch-1.0 udpsrc port=2001 ! application/x-rtp,media=video,encoding-name=VP8,payload=96 ! rtpvp8depay ! vp8dec ! videoconvert ! autovideosink",
+		"Description": "Remotely, using raw + vp8 codec over RTP/UDP",
+		"VideoName": "rtp+raw+vp8-codec-3.mp4",
+		"Camera": {},
+		"Stats": {
+			"average_delay": -1,
+			"standard_deviation": -1
+		}
+	},
+	{
+		"RunID": 4,
+		"SenderCommand": "gst-launch-1.0 v4l2src ! rtpjpegpay ! udpsink host=127.0.0.1 port=2001",
+		"ReceiverCommand": "gst-launch-1.0 udpsrc port=2001 ! application/x-rtp,media=video,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec !  videoconvert ! autovideosink",
+		"Description": "Remotely, using compressed frames and jpeg codec over RTP/UDP",
+		"VideoName": "rtp+jpeg-codec-4.mp4",
+		"Camera": {},
+		"Stats": {
+			"average_delay": -1,
+			"standard_deviation": -1
+		}
+	},
+	{
+		"RunID": 5,
+		"SenderCommand": "gst-launch-1.0 v4l2src ! video/x-raw ! videoconvert ! vp9enc ! rtpvp9pay ! udpsink host = 127.0.0.1 port=2001",
+		"ReceiverCommand": "gst-launch-1.0 udpsrc port=2001 ! application/x-rtp,media=video,encoding-name=VP9,payload=96 ! rtpvp9depay ! vp9dec ! videoconvert ! autovideosink",
+		"Description": "Remotely, using raw + vp9 codec over RTP/UDP",
+		"VideoName": "rtp+raw+vp9-codec-5.mp4",
+		"Camera": {},
+		"Stats": {
+			"average_delay": -1,
+			"standard_deviation": -1
+		}
+	},
+	{
+		"RunID": 6,
+		"SenderCommand": "gst-launch-1.0 v4l2src ! video/x-raw ! videoconvert ! vp8enc threads=4 ! rtpvp8pay ! udpsink host=127.0.0.1 port=2001",
+		"ReceiverCommand": "gst-launch-1.0 udpsrc port=2001 ! application/x-rtp,media=video,encoding-name=VP8,payload=96 ! rtpvp8depay ! vp8dec threads=4 ! videoconvert ! autovideosink",
+		"Description": "Remotely, using raw + vp8 codec over RTP/UDP and parallelism",
+		"VideoName": "rtp+raw+multithreaded+vp8-codec-6.mp4",
+		"Camera": {},
+		"Comments": [
+			"Multithreading doesn't seem to give an advantage in terms of latency"
+		],
+		"Stats": {
+			"average_delay": -1,
+			"standard_deviation": -1
+		}
+	},
+	{
+		"RunID": 7,
+		"SenderCommand": "gst-launch-1.0 v4l2src ! video/x-raw ! videoconvert ! vp9enc threads=4 ! rtpvp9pay ! udpsink host=127.0.0.1 port=2001",
+		"ReceiverCommand": "gst-launch-1.0 udpsrc port=2001 ! application/x-rtp,media=video,encoding-name=VP9,payload=96 ! rtpvp9depay ! vp9dec threads=4 ! videoconvert ! autovideosink",
+		"Description": "Remotely, using raw + vp8 codec over RTP/UDP and parallelism",
+		"VideoName": "rtp+raw+multithreaded+vp9-codec-7.mp4",
+		"Comments": [
+			"VP9 is slow for some reason"
+		],
+		"Camera": {},
+		"Stats": {
+			"average_delay": -1,
+			"standard_deviation": -1
+		}
+	}
+]
